@@ -1,6 +1,6 @@
 const app = require('./app')
 const knex = require('knex')
-
+require('dotenv').config();
 //const PORT = process.env.PORT || 8000
 const { PORT, DB_URL } = require('./config')
 
@@ -12,6 +12,7 @@ const db = knex({
 app.set('db', db)
 
 app.listen(PORT, () => {
+  console.log(process.env.MIGRATION_DB_NAME,'test database name')
   console.log(`Server listening at http://localhost:${PORT}`)
 })
 

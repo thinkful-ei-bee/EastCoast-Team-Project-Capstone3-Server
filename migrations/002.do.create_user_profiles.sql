@@ -5,7 +5,7 @@ CREATE TABLE "user_profile" (
     "movie_like" TEXT,
     "me_intro" TEXT NOT NULL,
     "user_id" INTEGER
-        REFERENCES users(id) ON DELETE CASCADE NOT NULL
+        REFERENCES users(id) ON DELETE CASCADE NOT NULL,
     "date_created" TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
