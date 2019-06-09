@@ -10,7 +10,7 @@ EventRouter
   .route('/')  
   .get(requireAuth,(req,res,next)=>{
 
-    EventService.getAllPublicEvents(
+    EventService.getAllEvents(
       req.app.get('db')
       ,req.user.id
     )
@@ -43,16 +43,28 @@ EventRouter
   })
 
 EventRouter
-  .route('/private')
-  .get((req,res,next)=>{
-
-    EventService.getAllPrivateEvents(
-      req.app.get('db')
+  .route('/:event_id')
+  .all(requireAuth)
+  .all((req,res,next)=>{
+    EventService.getById(
+      req.app.get('db'),
+      req.params.event_id
     )
-    .then(events=>{
-      res.json(events)
+    .then(event=>{
+      if(!event){
+        return res.status(404).json({
+          error:{message:`event doesn't exist`}
+        })        
+      }
+      res.event=event
+      next()
+      return event
     })
-    .catch(next)    
+    .catch(next)
+  })
+  .get(requireAuth)
+  .get((req,res,next)=>{
+    res.json(EventService.serializeEvent(res.event))
   })
   
 module.exports = EventRouter
