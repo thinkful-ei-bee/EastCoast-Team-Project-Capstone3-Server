@@ -1,3 +1,4 @@
+const xss = require('xss')
 const userProfileService ={
   getAllUserProfiles(db){
     return db 
@@ -25,6 +26,16 @@ const userProfileService ={
       .insert(newProfile)
       .into('user_profile')
       .returning('*')
+  },
+  serializeUserProfile(profile){
+    return{
+      id:profile.id,      
+      profile_picture:xss(profile.profile_picture),
+      music_like:xss(profile.music_like),
+      movie_like:xss(profile.movie_like),
+      me_intro:xss(profile.me_intro),
+      user_id:profile.user_id      
+    }
   }
 
 }
