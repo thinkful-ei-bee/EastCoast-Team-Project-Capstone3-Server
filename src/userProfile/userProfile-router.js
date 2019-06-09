@@ -39,5 +39,28 @@ userProfileRouter
           })
           .catch(next)
         })
-
+userProfileRouter
+  .route('/:profile_id')
+  .all(requireAuth)
+  .all((req,res,next)=>{
+    userProfileService.getById(
+      req.app.get('db'),
+      req.params.profile_id
+    )
+    .then(profile=>{
+      if(!profile){
+        return res.status(404).json(
+          {error:{message:`profile doesn't exist`}}
+        )
+      }
+      res.profile = profile
+      next()
+      return profile
+    })
+    .catch(next)
+  })
+  .get(requireAuth)
+  .get((req,res,next)=>{
+    res.json(userProfileService.serializeUserProfile(res.profile))
+  })
 module.exports = userProfileRouter
