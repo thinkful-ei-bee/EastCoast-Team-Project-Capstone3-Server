@@ -1,11 +1,12 @@
 const xss = require('xss')
 
 const EventService ={
-  getAllPublicEvents(db){
+  getAllPublicEvents(db,id){
     return db 
       .from('events')
       .select('*')   
-      .where('is_private',false)   
+      .where('is_private',false) 
+      .where('event_owner_id',id)
   },
   
   getAllPrivateEvents(db){
