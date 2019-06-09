@@ -76,7 +76,21 @@ EventRouter
       res.status(204).end()
     })
     .catch(next)
-    
   })
+
+  .patch(requireAuth,jsonBodyParser,(req,res,next)=>{
+    const{event_name,event_date,event_time,event_location,event_details,is_private} = req.body
+    const eventToUpdate = {event_name,event_date,event_time,event_location,event_details,is_private}
+    console.log(eventToUpdate,'update')
+    EventService.updateEvent(
+      req.app.get('db'),
+      req.params.event_id,
+      eventToUpdate
+    )
+    .then(numRowsAffected=>{
+      res.status(204).end()
+    })
+    .catch(next)
+    })
   
 module.exports = EventRouter
