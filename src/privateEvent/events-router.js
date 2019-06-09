@@ -66,5 +66,17 @@ EventRouter
   .get((req,res,next)=>{
     res.json(EventService.serializeEvent(res.event))
   })
+
+  .delete(requireAuth,(req,res,next)=>{
+    EventService.deleteEvent(
+      req.app.get('db'),
+      req.params.event_id
+    )
+    .then(numRowsAffected =>{
+      res.status(204).end()
+    })
+    .catch(next)
+    
+  })
   
 module.exports = EventRouter
