@@ -1,0 +1,3 @@
+ALTER TABLE "eventify_log"
+ADD COLUMN "event" INTEGER REFERENCES "events"(id)
+    ON DELETE SET NULL;

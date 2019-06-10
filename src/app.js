@@ -10,6 +10,7 @@ const errorHandler = require('./middleware/error-handler')
 const EventRouter = require('./privateEvent/events-router')
 const usersRouter = require('./users/users-router')
 const userProfileRouter = require('./userProfile/userProfile-router')
+const eventifyRouter = require('./enventifyRoute/enventify-router')
 app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
   skip: () => NODE_ENV === 'test',
 }))
@@ -29,6 +30,7 @@ app.use('/api/events',EventRouter)
 app.use('/api/users',usersRouter)
 app.use('/api/auth',authRouter)
 app.use('/api/user_profile',userProfileRouter)
+app.use('/api/eventify',eventifyRouter)
 app.use(errorHandler)
 
 module.exports = app

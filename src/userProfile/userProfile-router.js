@@ -63,4 +63,29 @@ userProfileRouter
   .get((req,res,next)=>{
     res.json(userProfileService.serializeUserProfile(res.profile))
   })
+  .delete(requireAuth,(req,res,next)=>{
+    userProfileService.deleteUserProfile(
+      req.app.get('db'),
+      req.params.profile_id
+    )
+    .then(numRowAffected=>{
+      res.status(204).end()
+    })
+    .catch(next)
+  })
+
+  .patch(requireAuth,jsonBodyParser,(req,res,next)=>{
+    const {profile_picture,music_like,movie_like,me_intro} = req.body
+    const profileToUpdate = {profile_picture,music_like,movie_like,me_intro}
+    userProfileService.updateUserProfile(
+      req.app.get('db'),
+      req.params.profile_id,
+      profileToUpdate
+    )
+    .then(numRowAffected=>{
+      res.status(204).end()
+    })
+    .catch(next)
+  })
+  
 module.exports = userProfileRouter
