@@ -7,6 +7,14 @@ const path = require('path')
 
  
 usersRouter
+  .get('/', (req, res, next) => {
+    const db = req.app.get('db')
+    UsersService.getUsers(db)
+      .then(users => {
+        res.status(200).json(users)
+      })
+      .catch(next)
+  })
   .post('/', jsonBodyParser, (req, res,next) => {
     
     const { password, user_name, full_name, gender,email } = req.body
