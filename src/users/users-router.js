@@ -4,15 +4,8 @@ const usersRouter = express.Router()
 const jsonBodyParser = express.json()
 
 const path = require('path')
-usersRouter
-  .get('/',(req,res,next)=>{
-    UsersService.getUsers(
-      req.app.get('db')
-    )
-    .then(users=>{
-      res.json(users)
-    })
-  })
+
+ 
 usersRouter
   .post('/', jsonBodyParser, (req, res,next) => {
     
