@@ -16,6 +16,7 @@ eventsRouter
 
     EventsService.getEvents(db)
       .then(event => {
+        console.log(event)
         res.status(200).json(event.map(serializeEvent))
       })
       .catch(next)
