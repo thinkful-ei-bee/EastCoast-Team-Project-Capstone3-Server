@@ -44,6 +44,11 @@ const UsersService = {
       .returning('*')
       .then(([user])=> user)
   },
+  getUsers(db){
+    return db
+      .select('*')
+      .from('users')
+  }
 }
 
 module.exports = UsersService

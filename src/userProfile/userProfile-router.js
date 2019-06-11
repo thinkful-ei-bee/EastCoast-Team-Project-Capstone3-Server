@@ -87,5 +87,5 @@ userProfileRouter
     })
     .catch(next)
   })
-  
+
 module.exports = userProfileRouter
