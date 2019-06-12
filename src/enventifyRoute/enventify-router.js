@@ -39,4 +39,55 @@ EventifyRouter
       .catch(next)
     })
 
-module.exports =EventifyRouter
+EventifyRouter
+.route('/:eventify_id')
+.all(requireAuth)
+.all((req, res, next) => {
+  EventifyService.getById(
+    req.app.get('db'),
+    req.params.eventify_id
+  )
+  .then(eventify=>{
+    if(!eventify){
+      return res.status(404).json(
+        {error:{message:`eventify doesn't exist`}}
+      )
+    }
+    res.eventify = eventify
+    next()
+    return eventify
+  })
+  .catch(next)
+})
+.get(requireAuth)
+.get(/* implement me */)
+.delete(requireAuth,(req,res,next)=>{
+  EventifyService.deleteEvent(
+    req.app.get('db'),
+    req.params.eventify_id
+  )
+  .then(eventify => {
+    res.status(204).end()
+  })
+  .catch(next)
+})
+.patch(requireAuth, jsonBodyParser, (req, res, next) => {
+  const { recipient_id,event } = req.body
+  const eventifyToUpdate = { recipient_id,event }
+
+  const numValues = Object.values(eventifyToUpdate).filter(Boolean).length
+  if (numValues === 0)
+    return res.status(400).json({ error: { message: 'Must not be blank '}})
+
+  EventifyService.updateEvent(
+    req.app.get('db'),
+    req.params.eventify_id,
+    eventifyToUpdate
+    )
+    .then(eventify => {
+      res.status(200).json(eventify[0])
+    })
+    .catch(next)
+})
+
+module.exports = EventifyRouter

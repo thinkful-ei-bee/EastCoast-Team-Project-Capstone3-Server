@@ -52,7 +52,7 @@ const userProfileService ={
   },
   updateUserProfile(db,id,updateProfile){
     return db 
-      .where({id})
+      .where({id: id})
       .update(updateProfile)
   },
   deleteUserProfile(db,id){

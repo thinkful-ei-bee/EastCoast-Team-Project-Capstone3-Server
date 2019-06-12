@@ -90,18 +90,23 @@ userProfileRouter
     .catch(next)
   })
 
-  .patch(requireAuth,jsonBodyParser,(req,res,next)=>{
-    const {profile_picture,music_like,movie_like,me_intro} = req.body
-    const profileToUpdate = {profile_picture,music_like,movie_like,me_intro}
+  .patch(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { profile_picture, music_like, movie_like, me_intro } = req.body
+    const profileToUpdate = { profile_picture, music_like, movie_like, me_intro }
+
+    const numValues = Object.values(profileToUpdate).filter(Boolean).length
+    if (numValues === 0)
+      return res.status(400).json({ error: { message: 'Must not be blank '}})
+
     userProfileService.updateUserProfile(
       req.app.get('db'),
       req.params.profile_id,
       profileToUpdate
-    )
-    .then(numRowAffected=>{
-      res.status(204).end()
-    })
-    .catch(next)
+      )
+      .then(profile => {
+        res.status(200).json(profile[0])
+      })
+      .catch(next)
   })
 
 module.exports = userProfileRouter
