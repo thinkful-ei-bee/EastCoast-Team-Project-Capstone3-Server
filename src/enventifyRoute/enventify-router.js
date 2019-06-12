@@ -60,14 +60,16 @@ EventifyRouter
   .catch(next)
 })
 .get(requireAuth)
-.get(/* implement me */)
+.get((req, res, next) => {
+  res.json(res.eventify)
+})
 .delete(requireAuth,(req,res,next)=>{
   EventifyService.deleteEvent(
     req.app.get('db'),
     req.params.eventify_id
   )
   .then(eventify => {
-    res.status(204).end()
+    res.status(204).send('Successfully delete')
   })
   .catch(next)
 })
