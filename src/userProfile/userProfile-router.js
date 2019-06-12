@@ -7,6 +7,21 @@ const path = require('path')
 const userProfileRouter = express.Router()
 
 userProfileRouter
+  .route('/current-user')
+  .get(requireAuth,(req,res,next)=>{
+   
+    userProfileService.getCurrentUserProfile(
+      req.app.get('db'),
+      String(req.user.id)
+    )
+    .then(profile=>{
+      
+      res.json(profile)
+    })
+    .catch(next)
+  })
+
+  userProfileRouter
   .route('/')
   .get(requireAuth,(req,res,next)=>{
     userProfileService.getAllUserProfiles(
@@ -17,7 +32,7 @@ userProfileRouter
     })
     .catch(next)
   })
-
+  
   .post(requireAuth,jsonBodyParser,(req,res,next)=>{
     const {profile_picture,music_like,movie_like,me_intro} = req.body
     const newProfile = {profile_picture,music_like,movie_like,me_intro}
@@ -43,6 +58,7 @@ userProfileRouter
   .route('/:profile_id')
   .all(requireAuth)
   .all((req,res,next)=>{
+    console.log(typeof req.params.profile_id,'test another id type')
     userProfileService.getById(
       req.app.get('db'),
       req.params.profile_id

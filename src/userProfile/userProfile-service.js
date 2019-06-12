@@ -16,7 +16,23 @@ const userProfileService ={
       )
       .innerJoin('users','users.id','user_profile.user_id')
   },
-
+  getCurrentUserProfile(db,id){
+    return db       
+    .from('user_profile')
+    .select(
+      'user_profile.id',
+      'user_profile.profile_picture',
+      'user_profile.music_like',
+      'user_profile.movie_like',
+      'user_profile.me_intro',
+      'user_profile.user_id',        
+      'users.gender',
+      'users.email',
+      'users.full_name',     
+    )
+    .innerJoin('users','users.id','user_profile.user_id')
+    .where('user_profile.user_id',id)
+  },
   getById(db,id){
     return db
     .from('user_profile AS usp')
