@@ -5,12 +5,24 @@ const EventService = require('./events-service')
 const path = require('path')
 const EventRouter = express.Router()
 
+EventRouter
+  .route('/all-event')  
+  .get(requireAuth,(req,res,next)=>{
+
+    EventService.getAllEvents(
+      req.app.get('db')      
+    )
+    .then(events=>{      
+      res.json(events)
+    })
+    .catch(next)    
+  })
 
 EventRouter
   .route('/')  
   .get(requireAuth,(req,res,next)=>{
 
-    EventService.getAllEvents(
+    EventService.getAllEventsCurrentUser(
       req.app.get('db')
       ,req.user.id
     )

@@ -1,14 +1,18 @@
 const xss = require('xss')
 
 const EventService ={
-  getAllEvents(db,id){
+  getAllEventsCurrentUser(db,id){
     return db 
       .from('events')
       .select('*')         
       .where('event_owner_id',id)
   },
   
-  
+  getAllEvents(db){
+    return db 
+    .from('events')
+    .select('*')         
+  },
 
   
   getById(db,id){
