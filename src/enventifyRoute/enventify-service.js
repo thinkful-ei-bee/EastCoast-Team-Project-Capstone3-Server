@@ -60,9 +60,11 @@ const EventifyService ={
   },
 
   updateEvent(db,id,newEventified){
-    return db('eventify_log')
-      .where({id})
-      .update(newEventified)
+    console.log(newEventified)
+    //return db('eventify_log')
+
+      // .where({id})
+      // .update(newEventified)
   },
 
   deleteEvent(db,id){

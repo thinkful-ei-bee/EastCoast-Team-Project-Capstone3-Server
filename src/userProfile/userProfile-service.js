@@ -51,7 +51,7 @@ const userProfileService ={
       .first()
   },
   updateUserProfile(db,id,updateProfile){
-    return db 
+    return db ('user_profile')
       .where({id: id})
       .update(updateProfile)
   },
