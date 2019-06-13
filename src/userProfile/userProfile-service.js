@@ -54,6 +54,7 @@ const userProfileService ={
     return db ('user_profile')
       .where({id: id})
       .update(updateProfile)
+      .returning('*')
   },
   deleteUserProfile(db,id){
     return db 
