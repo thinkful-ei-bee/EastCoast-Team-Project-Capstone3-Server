@@ -47,7 +47,7 @@ describe('Events Endpoints', function () {
       return db('events').insert(events);
     })
 
-    it('should respons to GET `/events/all-event` with an array of events and a status 200', () => {
+    it.skip('should respons to GET `/events/all-event` with an array of events and a status 200', () => {
       return supertest(app)
         .get('/events/all-event')
         .expect(200)
