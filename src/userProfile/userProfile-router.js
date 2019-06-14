@@ -7,6 +7,21 @@ const path = require('path')
 const userProfileRouter = express.Router()
 
 userProfileRouter
+  .route('/current-user')
+  .get(requireAuth,(req,res,next)=>{
+   
+    userProfileService.getCurrentUserProfile(
+      req.app.get('db'),
+      String(req.user.id)
+    )
+    .then(profile=>{
+      
+      res.json(profile)
+    })
+    .catch(next)
+  })
+
+  userProfileRouter
   .route('/')
   .get(requireAuth,(req,res,next)=>{
     userProfileService.getAllUserProfiles(
@@ -17,7 +32,7 @@ userProfileRouter
     })
     .catch(next)
   })
-
+  
   .post(requireAuth,jsonBodyParser,(req,res,next)=>{
     const {profile_picture,music_like,movie_like,me_intro} = req.body
     const newProfile = {profile_picture,music_like,movie_like,me_intro}
@@ -43,6 +58,7 @@ userProfileRouter
   .route('/:profile_id')
   .all(requireAuth)
   .all((req,res,next)=>{
+    console.log(typeof req.params.profile_id,'test another id type')
     userProfileService.getById(
       req.app.get('db'),
       req.params.profile_id
@@ -74,18 +90,23 @@ userProfileRouter
     .catch(next)
   })
 
-  .patch(requireAuth,jsonBodyParser,(req,res,next)=>{
-    const {profile_picture,music_like,movie_like,me_intro} = req.body
-    const profileToUpdate = {profile_picture,music_like,movie_like,me_intro}
+  .patch(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { profile_picture, music_like, movie_like, me_intro } = req.body
+    const profileToUpdate = { profile_picture, music_like, movie_like, me_intro }
+
+    const numValues = Object.values(profileToUpdate).filter(Boolean).length
+    if (numValues === 0)
+      return res.status(400).json({ error: { message: 'Must not be blank '}})
+
     userProfileService.updateUserProfile(
       req.app.get('db'),
       req.params.profile_id,
       profileToUpdate
-    )
-    .then(numRowAffected=>{
-      res.status(204).end()
-    })
-    .catch(next)
+      )
+      .then(profile => {
+        res.status(200).json(profile[0])
+      })
+      .catch(next)
   })
 
 module.exports = userProfileRouter
