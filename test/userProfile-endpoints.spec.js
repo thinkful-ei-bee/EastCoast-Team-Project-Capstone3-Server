@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe('UserProfile Endpoints', function () {
+describe.skip('UserProfile Endpoints', function () {
   let db
 
   before('make knex instance', () => {

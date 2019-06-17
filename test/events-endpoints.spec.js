@@ -4,31 +4,11 @@ const helpers = require('./test-helpers')
 
 describe('Events Endpoints', function () {
   let db
-  let events = [
-      {
-        id: 1,
-        event_name: 'test-event-1',
-        event_date: 'test-event-date-1',
-        event_time: '12:00pm,',
-        event_details: 'test event details 1',
-        event_owner_id: 1,
-        is_private: false, 
-        date_created: 'date created'
-      },
-      {
-        id: 2,
-        event_name: 'test-event-2',
-        event_date: 'test-event-date-2',
-        event_time: '1:00pm,',
-        event_details: 'test event details 2',
-        event_owner_id: 2,
-        is_private: false, 
-        date_created: 'date created'
-      }
-    ]
 
-  const testEvents = helpers.makeEventsArray()
-  const testEvent = testEvents[0]
+  const{
+    testUsers, 
+    testEvents
+  } = helpers.makeEventsFixtures();
 
   before('make knex instance', () => {
     db = helpers.makeKnexInstance()
@@ -37,17 +17,24 @@ describe('Events Endpoints', function () {
 
   after('disconnect from db', () => db.destroy())
 
-  before('cleanup', () => db.raw('TRUNCATE TABLE events RESTART IDENTITY;'))
+  before('cleanup', () => helpers.cleanTables(db))
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
   describe(`GET /events/all-event`, () => {
 
-    beforeEach('insert some events', () => {
-      return db('events').insert(events);
+    beforeEach('insert some events and users', () => {
+      return helpers.seedEventsTables(
+        db,
+        testUsers,
+        testEvents
+      )
     })
 
-    it.skip('should respons to GET `/events/all-event` with an array of events and a status 200', () => {
+    it('should respons to GET `/events/all-event` with an array of events and a status 200', () => {
+      // const expectedEvents = testEvents.map(event => 
+      //   helpers.makeEventsArray)
+      
       return supertest(app)
         .get('/events/all-event')
         .expect(200)
@@ -57,8 +44,8 @@ describe('Events Endpoints', function () {
           res.body.forEach(event => {
             expect(event).to.be.a('object')
             expect(event).to.include.keys('id', 'event_name', 'event_date', 'event_time', 'event_details', 'event_owner_id', 'is_private', 'date_created')
+            })
           })
-        })
-    });
+      });
+    })
   })
-})

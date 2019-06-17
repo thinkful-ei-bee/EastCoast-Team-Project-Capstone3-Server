@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe('Eventify Endpoints', function () {
+describe.skip('Eventify Endpoints', function () {
   let db
 
   before('make knex instance', () => {
@@ -21,7 +21,7 @@ describe('Eventify Endpoints', function () {
       /* implement me */
     })
 
-    it.skip('should respons to GET `/eventify` with an array of eventifies and a status 200', () => {
+    it('should respons to GET `/eventify` with an array of eventifies and a status 200', () => {
       return supertest(app)
         .get('/eventify')
         .expect(200)
