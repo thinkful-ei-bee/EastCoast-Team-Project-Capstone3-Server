@@ -43,8 +43,11 @@ describe('User Endpoints', function(){
         })
         it(`responds 400 'Password be longer than 8 characters' when empty password`, () => {
             const shortPassword = {
-                user_name: 'test user_name',
-                password: '12345'
+                email: 'test email',
+                gender: 'test gender',
+                password: '12345',
+                full_name: 'test full_name',
+                user_name: 'test user_name'
             }
             return supertest(app)
                 .post('/api/users')
@@ -63,8 +66,11 @@ describe('User Endpoints', function(){
         })
         it(`responds 400 error when password starts with spaces`, () => {
             const passwordStartsWithSpaces = {
-                user_name: 'test user_name',
-                password: ' 12345'
+                email: 'test email',
+                gender: 'test gender',
+                password: ' 12345678',
+                full_name: 'test full_name',
+                user_name: 'test user_name'
             }
             return supertest(app)
                 .post('api/users')
@@ -73,8 +79,11 @@ describe('User Endpoints', function(){
         })
         it(`responds 400 error when password ends with spaces`, () => {
             const passwordEndsWithSpaces = {
-                user_name: 'test user_name',
-                password: '12345 '
+                email: 'test email',
+                gender: 'test gender',
+                password: '12345678 ',
+                full_name: 'test full_name',
+                user_name: 'test user_name'
             }
             return supertest(app)
                 .post('api/users')
@@ -83,8 +92,11 @@ describe('User Endpoints', function(){
         })
         it(`responds 400 error when password isn't complex enough`, () => {
             const passwordNotComplex = {
-                user_name: 'test user_name',
-                password: '1122334455'
+                email: 'test email',
+                gender: 'test gender',
+                password: '1122334455',
+                full_name: 'test full_name',
+                user_name: 'test user_name'
             }
             return supertest(app)
                 .post('/api/users')
@@ -94,7 +106,10 @@ describe('User Endpoints', function(){
         it(`responds 400 'Username already taken' when username isn't unique`, () => {
             const duplicateUsername = {
                 user_name: testUser.user_name,
-                password: '11AAaa!!'
+                gender: 'test gender',
+                password: '11AAaa!!',
+                full_name: 'test full_name',
+                user_name: 'test user_name'
             }
             return supertest(app)
                 .post('/api/users')
@@ -104,8 +119,11 @@ describe('User Endpoints', function(){
         describe(`Given a valid user`, () => {
             it(`responds 201, serialized user with no password`, () => {
                 const newUser = {
-                    user_name: 'test user_name',
-                    password: '11AAaa!!'
+                    email: 'test email',
+                    gender: 'test gender',
+                    password: '11AAaa!!',
+                    full_name: 'test full_name',
+                    user_name: 'test user_name'
                 }
                 return supertest(app)
                     .post('/api/users')
@@ -114,6 +132,9 @@ describe('User Endpoints', function(){
                     .expect(res => {
                         expect(res.body).to.have.property('id')
                         expect(res.body.user_name).to.eql(newUser.user_name)
+                        expect(res.body.full_name).to.eql(newUser.full_name)
+                        expect(res.body.email).to.eql(newUser.email)
+                        expect(res.body.gender).to.eql(newUser.gender)
                         expect(res.body).to.not.have.property('password')
                         expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
                     })
@@ -134,6 +155,10 @@ describe('User Endpoints', function(){
                             .first()
                             .then(row => {
                                 expect(row.user_name).to.eql(newUser.user_name)
+                                expect(res.body.user_name).to.eql(newUser.user_name)
+                                expect(res.body.full_name).to.eql(newUser.full_name)
+                                expect(res.body.email).to.eql(newUser.email)
+                                expect(res.body.gender).to.eql(newUser.gender)
 
                                 return bcrypt.compare(newUser.password, row.password)
                             })
