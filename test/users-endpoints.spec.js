@@ -27,7 +27,8 @@ describe('User Endpoints', function(){
                 email: 'test email',
                 gender: 'test gender',
                 full_name: 'test full_name',
-                password: 'test password'
+                password: 'test password',
+                user_name: 'test user_name'
             }
             it(`responds with 400 required error when '${field}' is missing`, () => {
               delete registerAttemptBody[field]
@@ -40,6 +41,55 @@ describe('User Endpoints', function(){
                 })
             })
         })
-        
+        it(`responds 400 'Password be longer than 8 characters' when empty password`, () => {
+            const shortPassword = {
+                user_name: 'test user_name',
+                password: '12345'
+            }
+            return supertest(app)
+                .post('/api/users')
+                .send(shortPassword)
+                .expect(400, {error: `Password be longer than 8 characters`})
+        })
+        it(`responds 400 'Password be less than 72 characters' when long password`, () => {
+            const longPassword = {
+                user_name: 'test user_name',
+                password: '*'.repeat(73)
+            }
+            return supertest(app)
+                .post('api/users')
+                .send(longPassword)
+                .expect(400, {error: `Password be less than 72 characters`})
+        })
+        it(`responds 400 error when password starts with spaces`, () => {
+            const passwordStartsWithSpaces = {
+                user_name: 'test user_name',
+                password: ' 12345'
+            }
+            return supertest(app)
+                .post('api/users')
+                .send(passwordStartsWithSpaces)
+                .expect(400, { error: `Password must not start or end with empty spaces` })
+        })
+        it(`responds 400 error when password ends with spaces`, () => {
+            const passwordEndsWithSpaces = {
+                user_name: 'test user_name',
+                password: '12345 '
+            }
+            return supertest(app)
+                .post('api/users')
+                .send(passwordEndsWithSpaces)
+                .expect(400, { error: `Password must not start or end with empty spaces` })
+        })
+        it(`responds 400 error when password isn't complex enough`, () => {
+            const passwordNotComplex = {
+                username: 'test user_name',
+                password: '1122334455'
+            }
+            return supertest(app)
+                .post('/api/user')
+                .send(passwordNotComplex)
+                .expect(400, { error: `Password must contain one upper case, lower case, number and special character` })
+        })
     })
 })
