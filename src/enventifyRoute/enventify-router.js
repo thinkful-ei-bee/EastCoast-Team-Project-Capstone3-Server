@@ -87,7 +87,8 @@ EventifyRouter
     eventifyToUpdate
     )
     .then(eventify => {
-      res.status(200).json(eventify[0])
+      console.log(eventify)
+      res.status(200).json(eventifyToUpdate)
     })
     .catch(next)
 })
