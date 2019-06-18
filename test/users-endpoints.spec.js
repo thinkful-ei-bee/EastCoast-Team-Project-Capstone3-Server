@@ -83,13 +83,65 @@ describe('User Endpoints', function(){
         })
         it(`responds 400 error when password isn't complex enough`, () => {
             const passwordNotComplex = {
-                username: 'test user_name',
+                user_name: 'test user_name',
                 password: '1122334455'
             }
             return supertest(app)
-                .post('/api/user')
+                .post('/api/users')
                 .send(passwordNotComplex)
                 .expect(400, { error: `Password must contain one upper case, lower case, number and special character` })
+        })
+        it(`responds 400 'Username already taken' when username isn't unique`, () => {
+            const duplicateUsername = {
+                user_name: testUser.user_name,
+                password: '11AAaa!!'
+            }
+            return supertest(app)
+                .post('/api/users')
+                .send(duplicateUsername)
+                .expect(400, { error: `Username already taken` })
+        })
+        describe(`Given a valid user`, () => {
+            it(`responds 201, serialized user with no password`, () => {
+                const newUser = {
+                    user_name: 'test user_name',
+                    password: '11AAaa!!'
+                }
+                return supertest(app)
+                    .post('/api/users')
+                    .send(newUser)
+                    .expect(201)
+                    .expect(res => {
+                        expect(res.body).to.have.property('id')
+                        expect(res.body.user_name).to.eql(newUser.user_name)
+                        expect(res.body).to.not.have.property('password')
+                        expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
+                    })
+            })
+            it(`stores the new user in db with bcryped password`, () => {
+                const newUser = {
+                    user_name: 'test user_name',
+                    password: '11AAaa!!'
+                }
+                return supertest(app)
+                    .post('/api/users')
+                    .send(newUser)
+                    .expect(res =>
+                        db
+                            .from('user')
+                            .select('*')
+                            .where({ id: res.body.id })
+                            .first()
+                            .then(row => {
+                                expect(row.user_name).to.eql(newUser.user_name)
+
+                                return bcrypt.compare(newUser.password, row.password)
+                            })
+                            .then(compareMatch => {
+                                expect(compareMatch).to.be.true
+                            })
+                    )
+            })
         })
     })
 })
