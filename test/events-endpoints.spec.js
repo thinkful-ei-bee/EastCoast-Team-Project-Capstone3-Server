@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe.only('Events Endpoints', function () {
+describe('Events Endpoints', function () {
   let db
 
   const{
