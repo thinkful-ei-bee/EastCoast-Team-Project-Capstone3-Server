@@ -55,13 +55,13 @@ userProfileRouter
           .catch(next)
         })
 userProfileRouter
-  .route('/:profile_id')
+  .route('/:user_id')
   .all(requireAuth)
   .all((req,res,next)=>{
     console.log(typeof req.params.profile_id,'test another id type')
     userProfileService.getById(
       req.app.get('db'),
-      req.params.profile_id
+      req.params.user_id
     )
     .then(profile=>{
       if(!profile){
@@ -100,7 +100,7 @@ userProfileRouter
 
     userProfileService.updateUserProfile(
       req.app.get('db'),
-      req.params.profile_id,
+      req.params.user_id,
       profileToUpdate
       )
       .then(profile => {
