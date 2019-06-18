@@ -8,7 +8,7 @@ const EventRouter = express.Router()
 EventRouter
   .route('/all-event')  
   .get(requireAuth,(req,res,next)=>{
-
+    console.log('all events ')
     EventService.getAllEvents(
       req.app.get('db')      
     )

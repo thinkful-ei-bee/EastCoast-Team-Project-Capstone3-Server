@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe('Events Endpoints', function () {
+describe.only('Events Endpoints', function () {
   let db
 
   const{
@@ -36,7 +36,7 @@ describe('Events Endpoints', function () {
       //   helpers.makeEventsArray)
       
       return supertest(app)
-        .get('/events/all-event')
+        .get('/api/events/all-event')
         .expect(200)
         .expect(res => {
           expect(res.body).to.be.a('array')

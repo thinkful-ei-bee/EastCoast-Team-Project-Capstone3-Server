@@ -20,7 +20,7 @@ function makeUsersArray() {
       gender:'male'
     },
     {
-      id: 1,
+      id: 2,
       user_name: 'test-user-2',
       full_name: 'Test user 2',
       email:'test2@gmail.com',
@@ -35,20 +35,22 @@ function makeEventsArray(users) {
     {
       id: 1,
       event_name: 'test-event-1',
-      event_date: 'test-event-date-1',
+      event_date: '2020-03-12',
       event_time: '12:00pm,',
       event_details: 'test event details 1',
-      // event_owner_id: 1, 
+      event_location: 'California',
+      event_owner_id: 1, 
       is_private: false, 
       date_created: '2029-01-22T16:28:32.615Z'
     },
     {
       id: 2,
       event_name: 'test-event-2',
-      event_date: 'test-event-date-2',
+      event_date: '2020-03-12',
       event_time: '1:00pm,',
       event_details: 'test event details 2',
-      // event_owner_id: 1,
+      event_location: 'California',
+      event_owner_id: 2,
       is_private: false, 
       date_created: '2029-01-22T16:28:32.615Z'
     }
