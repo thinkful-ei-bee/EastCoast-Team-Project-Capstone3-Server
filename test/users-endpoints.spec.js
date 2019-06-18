@@ -101,7 +101,7 @@ describe.only('User Endpoints', function(){
             return supertest(app)
                 .post('/api/users')
                 .send(passwordNotComplex)
-                .expect(400, { error: `Password must contain one upper case, lower case, number and special character` })
+                .expect(400, { error: `Password must contain 1 upper case, lower case, number and special character` })
         })
         it(`responds 400 'Username already taken' when username isn't unique`, () => {
             const duplicateUsername = {

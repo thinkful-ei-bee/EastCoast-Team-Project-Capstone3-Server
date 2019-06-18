@@ -113,6 +113,7 @@ module.exports = {
   makeKnexInstance,
   makeUsersArray,
   makeEventsArray,
+  seedUsers,
   seedEventsTables,
   makeEventsFixtures,
   cleanTables,
