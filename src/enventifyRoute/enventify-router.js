@@ -74,8 +74,8 @@ EventifyRouter
   .catch(next)
 })
 .patch(requireAuth, jsonBodyParser, (req, res, next) => {
-  const { recipient_id,event } = req.body
-  const eventifyToUpdate = { recipient_id,event }
+  const { event, recipient_id, is_accept  } = req.body
+  const eventifyToUpdate = { event, recipient_id, is_accept  }
 
   const numValues = Object.values(eventifyToUpdate).filter(Boolean).length
   if (numValues === 0)
