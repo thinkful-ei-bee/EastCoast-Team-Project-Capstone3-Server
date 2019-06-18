@@ -3,8 +3,29 @@ const xss = require('xss')
 const EventifyService ={
   getAllEventifiedLog(db){
     return db 
-      .from('eventify_log')
-      .select('*')         
+      .from('eventify_log AS el')
+      .select(
+        'el.id',
+        'el.sender_id',
+        'el.recipient_id',
+        'el.date_created',
+        'el.event',
+        'el.is_accept',
+        'up.profile_picture',
+        'up.music_like',
+        'up.movie_like',
+        'up.me_intro',
+        'evs.event_name',
+        'evs.event_date',
+        'evs.event_time',
+        'evs.event_location',
+        'evs.is_private',
+        'usr.gender',
+        'usr.full_name')
+      .join('user_profile AS up','up.user_id','el.sender_id')         
+      .join('events AS evs','evs.id','el.event')
+      .join('users AS usr','el.sender_id','usr.id'
+      )
       
   },
   
@@ -38,9 +59,11 @@ const EventifyService ={
   },
 
   updateEvent(db,id,newEventified){
-    return db('eventify_log')
-      .where({id})
-      .update(newEventified)
+    console.log(newEventified)
+    //return db('eventify_log')
+
+      // .where({id})
+      // .update(newEventified)
   },
 
   deleteEvent(db,id){

@@ -5,6 +5,23 @@ const userProfileService ={
       .select('*')
       .from('user_profile')
   },
+  getCurrentUserProfile(db,id){
+    return db       
+    .from('user_profile')
+    .select(
+      'user_profile.id',
+      'user_profile.profile_picture',
+      'user_profile.music_like',
+      'user_profile.movie_like',
+      'user_profile.me_intro',
+      'user_profile.user_id',        
+      'users.gender',
+      'users.email',
+      'users.full_name',     
+    )
+    .innerJoin('users','users.id','user_profile.user_id')
+    .where('user_profile.user_id',id)
+  },
   getById(db,id){
     return db
       .select('*')
@@ -13,9 +30,10 @@ const userProfileService ={
       .first()
   },
   updateUserProfile(db,id,updateProfile){
-    return db 
-      .where({id})
+    return db ('user_profile')
+      .where({id: id})
       .update(updateProfile)
+      .returning('*')
   },
   deleteUserProfile(db,id){
     return db 
@@ -36,6 +54,10 @@ const userProfileService ={
       me_intro:xss(profile.me_intro),
       user_id:profile.user_id      
     }
+  },
+  getProfileGender(db) {
+    return db
+      .select ()
   }
 
 }
