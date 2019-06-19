@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.only('User Endpoints', function(){
+describe('User Endpoints', function(){
     let db
     const testUsers = helpers.makeUsersArray()
     const testUser = testUsers[0]
@@ -54,8 +54,11 @@ describe.only('User Endpoints', function(){
                 .send(shortPassword)
                 .expect(400, {error: `Password be longer than 8 characters`})
         })
-        it(`responds 400 'Password be less than 72 characters' when long password`, () => {
+        it.only(`responds 400 'Password be less than 72 characters' when long password`, () => {
             const longPassword = {
+                email: 'test email',
+                gender: 'test gender',
+                full_name: 'test full_name',
                 user_name: 'test user_name',
                 password: '*'.repeat(73)
             }
