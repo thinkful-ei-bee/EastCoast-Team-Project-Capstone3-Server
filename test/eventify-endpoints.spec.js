@@ -7,6 +7,7 @@ describe('Eventify Endpoints', function () {
 
   const {
     testUsers, 
+    testEvents,
     testEventify
   } = helpers.makeEventifyFixtures();
 
@@ -21,16 +22,16 @@ describe('Eventify Endpoints', function () {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
-  describe(`GET /eventify`, () => {
-    beforeEach('insert some eventifys and users', () => {
+  describe(`GET /api/eventify`, () => {
+    beforeEach('insert some eventifies and users', () => {
       return helpers.seedEventifyTables(
         db, testUsers, testEventify
       )
     })
 
-    it('should respons to GET `/eventify` with an array of eventifies and a status 200', () => {
+    it('should respons to GET `/api/eventify` with an array of eventifies and a status 200', () => {
       return supertest(app)
-        .get('/eventify')
+        .get('/api/eventify')
         .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
         .expect(200)
         // .expect(res => {

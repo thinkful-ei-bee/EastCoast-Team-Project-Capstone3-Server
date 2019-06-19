@@ -33,6 +33,7 @@ function makeUsersArray() {
 function makeEventsArray(users) {
   return [
     {
+      id: 1,
       event_name: 'test-event-1',
       event_date: '2020-03-12',
       event_time: '12:00pm,',
@@ -43,6 +44,7 @@ function makeEventsArray(users) {
       date_created: '2029-01-22T16:28:32.615Z'
     },
     {
+      id: 2,
       event_name: 'test-event-2',
       event_date: '2020-03-12',
       event_time: '1:00pm,',
@@ -61,14 +63,14 @@ function makeEventifyArray(users) {
       sender_id: 1,
       recipient_id: 2,
       date_created: '2029-01-22T16:28:32.615Z',
-      event: 15,
+      event: 1,
       is_accept: false
     },
     {
       sender_id: 2,
       recipient_id: 5,
       date_created: '2029-01-22T16:28:32.615Z',
-      event: 25,
+      event: 2,
       is_accept: false
     }
   ]
@@ -82,8 +84,9 @@ function makeEventsFixtures() {
 
 function makeEventifyFixtures() {
   const testUsers = makeUsersArray()
+  const testEvents = makeEventsArray()
   const testEventify = makeEventifyArray(testUsers)
-  return { testUsers, testEventify }
+  return { testUsers, testEvents, testEventify }
 }
 
 function cleanTables(db) {
@@ -96,7 +99,7 @@ function cleanTables(db) {
         intrigued_log,
         user_profile
         RESTART IDENTITY CASCADE`
-    )
+      )
     )
   }
 
@@ -120,8 +123,9 @@ function seedEventsTables(db, users, events) {
     .then(() => db.into('events').insert(events))
 }
 
-function seedEventifyTables(db, users, eventify) {
+function seedEventifyTables(db, users, events, eventify) {
   return seedUsers(db, users)
+    // .then(() => db.into('events').insert(events))
     .then(() => db.into('eventify_log').insert(eventify))
 }
 
@@ -136,6 +140,7 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
 module.exports = {
   makeKnexInstance,
   makeUsersArray,
+  seedUsers,
 
   makeEventsArray,
   seedEventsTables,

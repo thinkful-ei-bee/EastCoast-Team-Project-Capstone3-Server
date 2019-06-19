@@ -115,10 +115,9 @@ describe('Events Endpoints', function () {
 
     describe('POST /api/events', () => {
       beforeEach('insert some events and users', () => {
-        return helpers.seedEventsTables(
+        return helpers.seedUsers(
           db,
-          testUsers,
-          testEvents
+          testUsers
         )
       })
 
