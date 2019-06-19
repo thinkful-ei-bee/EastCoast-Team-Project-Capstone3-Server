@@ -34,6 +34,7 @@ function makeProfileArray(users) {
   return [
     {
       id: 1,
+      user_id: 1,
       profile_picture: 'https://reason.org/wp-content/uploads/2018/01/guybentley.jpg',
       music_like: 'test movie 1',
       movie_like: 'test music 1',
@@ -42,6 +43,7 @@ function makeProfileArray(users) {
     {
       
       id: 2,
+      user_id: 2,
       profile_picture: 'https://assets.capitalfm.com/2018/23/lilliya-scarlett-instagram-1528814125-custom-0.png',
       music_like: 'test music 2',
       movie_like: 'test movie 2',

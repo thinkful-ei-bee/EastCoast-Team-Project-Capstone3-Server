@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe.only('UserProfile Endpoints', function () {
+describe('UserProfile Endpoints', function () {
   let db
 
   const {
@@ -21,7 +21,7 @@ describe.only('UserProfile Endpoints', function () {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
-  describe(`GET /user_profile/current-user`, () => {
+  describe.only(`GET /current-user`, () => {
     beforeEach('insert user_profile', () => {
       return helpers.seedUserProfiles(
         db,
@@ -31,7 +31,7 @@ describe.only('UserProfile Endpoints', function () {
     })
     it('should respond to GET `/current-user` with an array of profiles and a status 200', () => {
       return supertest(app)
-        .get('/api/user_profile/current-user')
+        .get('/current-user')
         .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
         .expect(200)
         .expect(res => {
