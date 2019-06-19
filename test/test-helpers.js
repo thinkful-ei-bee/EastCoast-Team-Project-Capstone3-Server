@@ -55,14 +55,35 @@ function makeEventsArray(users) {
   ]
 }
 
-function makeExpectedEvents(users, events) {
-  const user = users.find(user => user.id === events.user_id)
+function makeEventifyArray(users) {
+  return [
+    {
+      sender_id: 1,
+      recipient_id: 2,
+      date_created: '2029-01-22T16:28:32.615Z',
+      event: 15,
+      is_accept: false
+    },
+    {
+      sender_id: 2,
+      recipient_id: 5,
+      date_created: '2029-01-22T16:28:32.615Z',
+      event: 25,
+      is_accept: false
+    }
+  ]
 }
 
 function makeEventsFixtures() {
   const testUsers = makeUsersArray()
   const testEvents = makeEventsArray(testUsers)
   return { testUsers, testEvents }
+}
+
+function makeEventifyFixtures() {
+  const testUsers = makeUsersArray()
+  const testEventify = makeEventifyArray(testUsers)
+  return { testUsers, testEventify }
 }
 
 function cleanTables(db) {
@@ -99,6 +120,11 @@ function seedEventsTables(db, users, events) {
     .then(() => db.into('events').insert(events))
 }
 
+function seedEventifyTables(db, users, eventify) {
+  return seedUsers(db, users)
+    .then(() => db.into('eventify_log').insert(eventify))
+}
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   const token = jwt.sign({ user_id: user.id }, secret, {
          subject: user.user_name,
@@ -110,9 +136,15 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
 module.exports = {
   makeKnexInstance,
   makeUsersArray,
+
   makeEventsArray,
   seedEventsTables,
   makeEventsFixtures,
+
+  makeEventifyArray,
+  seedEventifyTables,
+  makeEventifyFixtures,
+
   cleanTables,
   makeAuthHeader,
 }
