@@ -58,12 +58,12 @@ const EventifyService ={
       .returning('*')
   },
 
-  updateEvent(db,id,newEventified){
+  updateEvent(db, id, newEventified){
     console.log(newEventified)
-    //return db('eventify_log')
+    return db('eventify_log')
 
-      // .where({id})
-      // .update(newEventified)
+      .where({id})
+      .update(newEventified)
   },
 
   deleteEvent(db,id){
