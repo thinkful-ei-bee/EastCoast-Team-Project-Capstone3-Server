@@ -7,14 +7,11 @@ const EventService ={
       .select('*')         
       .where('event_owner_id',id)
   },
-  
   getAllEvents(db){
     return db 
     .from('events')
     .select('*')         
   },
-
-  
   getById(db,id){
     return db
       .from('events')

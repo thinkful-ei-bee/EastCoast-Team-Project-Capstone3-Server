@@ -1,11 +1,7 @@
-const knex = require('knex')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+const knex = require('knex');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-/**
- * create a knex instance connected to postgres
- * @returns {knex instance}
- */
 function makeKnexInstance() {
   return knex({
     client: 'pg',
@@ -13,10 +9,6 @@ function makeKnexInstance() {
   })
 }
 
-/**
- * create a knex instance connected to postgres
- * @returns {array} of user objects
- */
 function makeUsersArray() {
   return [
     {
@@ -28,7 +20,7 @@ function makeUsersArray() {
       gender:'male'
     },
     {
-      id: 1,
+      id: 2,
       user_name: 'test-user-2',
       full_name: 'Test user 2',
       email:'test2@gmail.com',
@@ -38,113 +30,92 @@ function makeUsersArray() {
   ]
 }
 
-
-
-/**
- * make a bearer token with jwt for authorization header
- * @param {object} user - contains `id`, `username`
- * @param {string} secret - used to create the JWT
- * @returns {string} - for HTTP authorization header
- */
-function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
-  const token = jwt.sign({ user_id: user.id }, secret, {
-    subject: user.username,
-    algorithm: 'HS256',
-  })
-  return `Bearer ${token}`
+function makeEventsArray(users) {
+  return [
+    {
+      id: 1,
+      event_name: 'test-event-1',
+      event_date: '2020-03-12',
+      event_time: '12:00pm,',
+      event_details: 'test event details 1',
+      event_location: 'California',
+      event_owner_id: 1, 
+      is_private: false, 
+      date_created: '2029-01-22T16:28:32.615Z'
+    },
+    {
+      id: 2,
+      event_name: 'test-event-2',
+      event_date: '2020-03-12',
+      event_time: '1:00pm,',
+      event_details: 'test event details 2',
+      event_location: 'California',
+      event_owner_id: 2,
+      is_private: false, 
+      date_created: '2029-01-22T16:28:32.615Z'
+    }
+  ]
 }
 
-/**
- * remove data from tables and reset sequences for SERIAL id fields
- * @param {knex instance} db
- * @returns {Promise} - when tables are cleared
- */
+function makeExpectedEvents(users, events) {
+  const user = users.find(user => user.id === events.user_id)
+}
+
+function makeEventsFixtures() {
+  const testUsers = makeUsersArray()
+  const testEvents = makeEventsArray(testUsers)
+  return { testUsers, testEvents }
+}
+
 function cleanTables(db) {
   return db.transaction(trx =>
     trx.raw(
       `TRUNCATE
-        "eventify_log",
-        "events",
-        "users",        
-        "intrigued_log",
-        "user_profile"`
-      )
-      .then(() =>
-        Promise.all([
-          trx.raw(`ALTER SEQUENCE word_id_seq minvalue 0 START WITH 1`),
-          trx.raw(`ALTER SEQUENCE language_id_seq minvalue 0 START WITH 1`),
-          trx.raw(`ALTER SEQUENCE user_id_seq minvalue 0 START WITH 1`),
-          trx.raw(`SELECT setval('word_id_seq', 0)`),
-          trx.raw(`SELECT setval('language_id_seq', 0)`),
-          trx.raw(`SELECT setval('user_id_seq', 0)`),
-        ])
-      )
-  )
-}
+        eventify_log,
+        events,
+        users,        
+        intrigued_log,
+        user_profile
+        RESTART IDENTITY CASCADE`
+    )
+    )
+  }
 
-/**
- * insert users into db with bcrypted passwords and update sequence
- * @param {knex instance} db
- * @param {array} users - array of user objects for insertion
- * @returns {Promise} - when users table seeded
- */
 function seedUsers(db, users) {
   const preppedUsers = users.map(user => ({
-    ...user,
-    password: bcrypt.hashSync(user.password, 1)
-  }))
-  return db.transaction(async trx => {
-    await trx.into('user').insert(preppedUsers)
+      ...user,
+      password: bcrypt.hashSync(user.password, 1)
+    }))
+    return db.into('users').insert(preppedUsers)
+      .then(() =>
+        // update the auto sequence to stay in sync
+        db.raw(
+          `SELECT setval('users_id_seq', ?)`,
+          [users[users.length - 1].id],
+        )
+      )
+ }
 
-    await trx.raw(
-      `SELECT setval('user_id_seq', ?)`,
-      [users[users.length - 1].id],
-    )
-  })
+function seedEventsTables(db, users, events) {
+  return seedUsers(db, users)
+    .then(() => db.into('events').insert(events))
 }
 
-/**
- * seed the databases with words and update sequence counter
- * @param {knex instance} db
- * @param {array} users - array of user objects for insertion
- * @param {array} languages - array of languages objects for insertion
- * @param {array} words - array of words objects for insertion
- * @returns {Promise} - when all tables seeded
- */
-async function seedUsersLanguagesWords(db, users, languages, words) {
-  await seedUsers(db, users)
-
-  await db.transaction(async trx => {
-    await trx.into('language').insert(languages)
-    await trx.into('word').insert(words)
-
-    const languageHeadWord = words.find(
-      w => w.language_id === languages[0].id
-    )
-
-    await trx('language')
-      .update({ head: languageHeadWord.id })
-      .where('id', languages[0].id)
-
-    await Promise.all([
-      trx.raw(
-        `SELECT setval('language_id_seq', ?)`,
-        [languages[languages.length - 1].id],
-      ),
-      trx.raw(
-        `SELECT setval('word_id_seq', ?)`,
-        [words[words.length - 1].id],
-      ),
-    ])
-  })
+function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
+  const token = jwt.sign({ user_id: user.id }, secret, {
+         subject: user.user_name,
+         algorithm: 'HS256',
+     })
+   return `Bearer ${token}`
 }
 
 module.exports = {
   makeKnexInstance,
   makeUsersArray,
-  makeLanguagesAndWords,
-  makeAuthHeader,
-  cleanTables,
+  makeEventsArray,
   seedUsers,
-  seedUsersLanguagesWords,
+  seedEventsTables,
+  makeEventsFixtures,
+  cleanTables,
+  makeAuthHeader,
 }
