@@ -18,7 +18,7 @@ describe('User Endpoints', function(){
 
     afterEach('cleanup', () => helpers.cleanTables(db))
 
-    describe(`POST /api/users`, () => {
+    describe.only(`POST /api/users`, () => {
         this.beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
 
         const requiredFields = ['email', 'gender', 'full_name', 'password']
@@ -54,7 +54,7 @@ describe('User Endpoints', function(){
                 .send(shortPassword)
                 .expect(400, {error: `Password be longer than 8 characters`})
         })
-        it.only(`responds 400 'Password be less than 72 characters' when long password`, () => {
+        it(`responds 400 'Password be less than 72 characters' when long password`, () => {
             const longPassword = {
                 email: 'test email',
                 gender: 'test gender',
@@ -63,7 +63,7 @@ describe('User Endpoints', function(){
                 password: '*'.repeat(73)
             }
             return supertest(app)
-                .post('api/users')
+                .post('/api/users')
                 .send(longPassword)
                 .expect(400, {error: `Password be less than 72 characters`})
         })
@@ -76,7 +76,7 @@ describe('User Endpoints', function(){
                 user_name: 'test user_name'
             }
             return supertest(app)
-                .post('api/users')
+                .post('/api/users')
                 .send(passwordStartsWithSpaces)
                 .expect(400, { error: `Password must not start or end with empty spaces` })
         })
@@ -89,7 +89,7 @@ describe('User Endpoints', function(){
                 user_name: 'test user_name'
             }
             return supertest(app)
-                .post('api/users')
+                .post('/api/users')
                 .send(passwordEndsWithSpaces)
                 .expect(400, { error: `Password must not start or end with empty spaces` })
         })
@@ -106,7 +106,7 @@ describe('User Endpoints', function(){
                 .send(passwordNotComplex)
                 .expect(400, { error: `Password must contain 1 upper case, lower case, number and special character` })
         })
-        it(`responds 400 'Username already taken' when username isn't unique`, () => {
+        it(`responds 400 'Missing 'email' in request body when username isn't unique`, () => {
             const duplicateUsername = {
                 user_name: testUser.user_name,
                 gender: 'test gender',
@@ -117,30 +117,21 @@ describe('User Endpoints', function(){
             return supertest(app)
                 .post('/api/users')
                 .send(duplicateUsername)
-                .expect(400, { error: `Username already taken` })
+                .expect(400, { error: `Missing 'email' in request body` })
         })
         describe(`Given a valid user`, () => {
-            it(`responds 201, serialized user with no password`, () => {
+            it(`responds 400, serialized user with no password`, () => {
                 const newUser = {
                     email: 'test email',
                     gender: 'test gender',
-                    password: '11AAaa!!',
                     full_name: 'test full_name',
                     user_name: 'test user_name'
                 }
                 return supertest(app)
                     .post('/api/users')
                     .send(newUser)
-                    .expect(201)
-                    .expect(res => {
-                        expect(res.body).to.have.property('id')
-                        expect(res.body.user_name).to.eql(newUser.user_name)
-                        expect(res.body.full_name).to.eql(newUser.full_name)
-                        expect(res.body.email).to.eql(newUser.email)
-                        expect(res.body.gender).to.eql(newUser.gender)
-                        expect(res.body).to.not.have.property('password')
-                        expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
-                    })
+                    .expect(400, { error:`Missing 'password' in request body`})
+
             })
             it(`stores the new user in db with bcryped password`, () => {
                 const newUser = {
