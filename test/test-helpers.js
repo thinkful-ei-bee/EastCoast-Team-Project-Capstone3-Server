@@ -33,7 +33,6 @@ function makeUsersArray() {
 function makeEventsArray(users) {
   return [
     {
-      id: 1,
       event_name: 'test-event-1',
       event_date: '2020-03-12',
       event_time: '12:00pm,',
@@ -44,7 +43,6 @@ function makeEventsArray(users) {
       date_created: '2029-01-22T16:28:32.615Z'
     },
     {
-      id: 2,
       event_name: 'test-event-2',
       event_date: '2020-03-12',
       event_time: '1:00pm,',

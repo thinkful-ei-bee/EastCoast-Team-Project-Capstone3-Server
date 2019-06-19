@@ -124,20 +124,19 @@ describe.only('Events Endpoints', function () {
       })
 
       it('should create and return a new event when provided valid data', () => {
-        // this.retries(3)
         const testEvent = testEvents[0];
         const testUser = testUsers[0];
         const newEvent = {
           'id': testEvent.id,
           'event_name': 'test-event-1',
           'event_date': '2020-03-12',
-          'event_time': '12:00pm,',
+          'event_time': '12:00:00',
           'event_details': 'test event details 1',
           'event_location': 'California',
           'event_owner_id': testUser.id, 
           'is_private': false, 
           'date_created': '2029-01-22T16:28:32.615Z'
-        }
+          }
 
         return supertest(app)
         .post('/api/events')
@@ -145,12 +144,109 @@ describe.only('Events Endpoints', function () {
         .send(newEvent)
         .expect(201)
         .expect(res => {
-          expect(res.body).to.be.a('object')
-          expect(res.body).to.have.property('id');
-          expect(res.body).to.include.keys('id', 'event_name', 'event_date', 'event_time', 'event_location', 'event_details', 'event_owner_id')
-          // expect(res.body.event_name).to.equal(newTodo.event_name)
-          // expect(res.headers.location).to.equal(`/api/events/${res.body.id}`)
+          expect(res.body).to.be.a('array')
+          res.body.map(i => 
+            expect(i).to.have.all.keys('id', 'event_name', 'event_date', 'event_time', 'event_details', 'event_location', 'event_owner_id', 'is_private', 'date_created'))
+          expect(res.headers.location).to.equal(`/api/events/${res.body.id}`)
         })
+      })
+
+      // it('should respond with a 400 status when given bad data', () => {
+      //   const badItem = {
+      //     invalidData: 'baddata'
+      //   }
+      //   return supertest(app)
+      //     .post('/api/events')
+      //     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+      //     .send(badItem)
+      //     .expect(400)
+      // })
+    })
+
+    describe('PATCH /api/events/:event_id', () => {
+      beforeEach('insert some events and users', () => {
+        return helpers.seedEventsTables(
+          db,
+          testUsers,
+          testEvents
+        )
+      })
+
+      it('should update event when given valid data and an id', () => {
+        const updatedEvent = {
+          'event_name': 'test-event-1',
+          'event_date': '2020-03-12',
+          'event_time': '2:00:00',
+          'event_details': 'test event details 1',
+          'event_location': 'Colorado',
+          'is_private': true, 
+          }
+
+          let event;
+          return db('events')
+            .first()
+            .then(_event => {
+              event = _event
+              return supertest(app)
+                .patch(`/api/events/${event.id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(updatedEvent)
+                .expect(200)
+            })
+            .then(res => {
+              expect(res.body).to.be.a('object')
+              expect(res.body).to.include.keys('event_name', 'event_date', 'event_time', 'event_details', 'event_location', 'is_private')
+            })
+          })
+
+      it('should respond with 400 status when given bad data', () => {
+        const badData = {
+          badItem: 'broken item'
+        }
+
+        return db('events')
+          .first()
+          .then(event => {
+            return supertest(app)
+              .patch(`/api/events/${event.id}`)
+              .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+              .send(badData)
+              .expect(400)
+          })
+      })
+
+      it('should respond with a 404 for an invalid id', () => {
+        const event = {
+          'event_name':'test event name'
+        }
+        
+        return supertest(app)
+          .patch(`/api/events/100000000`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send(event)
+          .expect(404)
+      })
+    })
+
+
+    describe('DELETE /api/events/:event_id', () => {
+      beforeEach('insert some events and users', () => {
+        return helpers.seedEventsTables(
+          db,
+          testUsers,
+          testEvents
+        )
+      })
+
+      it('should delete an event by id', () => {
+        return db('events')
+          .first()
+          .then(event => {
+            return supertest(app)
+            .delete(`/api/events/${event.id}`)
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+            .expect(204)
+          })
       })
     })
   })

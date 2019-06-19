@@ -91,18 +91,23 @@ EventRouter
   })
 
   .patch(requireAuth,jsonBodyParser,(req,res,next)=>{
-    const{event_name,event_date,event_time,event_location,event_details,is_private} = req.body
-    const eventToUpdate = {event_name,event_date,event_time,event_location,event_details,is_private}
+    const { event_name, event_date, event_time, event_location, event_details, is_private } = req.body
+    const eventToUpdate = { event_name, event_date, event_time, event_location, event_details, is_private }
+    
+    const numValues = Object.values(eventToUpdate).filter(Boolean).length
+    if (numValues === 0)
+      return res.status(400).json({ error: { message: 'Must not be blank '}})
+    
     console.log(eventToUpdate,'update')
     EventService.updateEvent(
       req.app.get('db'),
       req.params.event_id,
       eventToUpdate
     )
-    .then(numRowsAffected=>{
-      res.status(204).end()
+    .then(event=>{
+      res.status(200).json(eventToUpdate)
     })
     .catch(next)
-    })
+  })
   
 module.exports = EventRouter
