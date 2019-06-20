@@ -94,7 +94,7 @@ describe('Eventify Endpoints', function () {
     describe('POST /api/eventify', () => {
       beforeEach('insert some eventifies and users', () => {
         return helpers.seedEventifyTables(
-          db, testUsers, testEvents, testEventify
+          db, testUsers, testEvents
           )
       })
 
@@ -116,12 +116,103 @@ describe('Eventify Endpoints', function () {
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .send(newEventify)
           .expect(201)
-          // .expect(res => {
-          //   expect(res.body).to.be.a('array')
-          //   res.body.map(i => 
-          //     expect(i).to.have.all.keys('id', 'sender_id', 'recipient_id', 'date_created', 'event', 'is_accept'))
-          //     expect(res.headers.location).to.equal(`/api/eventify/${res.body.id}`)
-          // })
+          .expect(res => {
+            expect(res.body).to.be.a('array')
+            res.body.map(i => 
+              expect(i).to.have.all.keys('id', 'sender_id', 'recipient_id', 'date_created', 'event', 'is_accept'))
+          })
+        })
+
+        it('should respond with a 400 status when given no data', () => {
+          const badItem = {  }
+
+          return supertest(app)
+            .post('/api/eventify')
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+            .send(badItem)
+            .expect(400)
         })
       })
+
+      describe('PATCH /api/eventify/:eventify_id', () => {
+        beforeEach('insert some eventifies and users', () => {
+          return helpers.seedEventifyTables(
+            db, testUsers, testEvents, testEventify
+            )
+        })
+
+        it('should update event when given valid data and an id', () => {
+          const testEvent = testEvents[0]
+          
+          const updatedEventify = {
+            'recipient_id': 1,
+            'event': testEvent.id
+          }
+
+          let eventify;
+          return db('eventify_log')
+            .first()
+            .then(_eventify => {
+              eventify = _eventify
+              return supertest(app)
+                .patch(`/api/eventify/${eventify.id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(updatedEventify)
+                .expect(200)
+            })
+            .then(res => {
+              expect(res.body).to.be.a('object')
+              expect(res.body).to.include.keys('event', 'recipient_id')
+            })
+        })
+
+        it('should respond with 400 status when given bad data', () => {
+          const badData = {
+            badItem: 'brokem item'
+          }
+          
+          return db('eventify_log')
+            .first()
+            .then(eventify => {
+              return supertest(app)
+                .patch(`/api/eventify/${eventify.id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .send(badData)
+                .expect(400)
+            })
+        })
+
+        it('should respond with a 404 for an invalid id', () => {
+          const eventify = {
+            'recipient_id': 2
+          }
+
+          return supertest(app)
+            .patch(`/api/eventify/100000000`)
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+            .send(eventify)
+            .expect(404)
+        })
+      })
+
+
+      describe('DELETE /api/eventify/:eventify_id', () => {
+        beforeEach('insert some eventifies and users', () => {
+          return helpers.seedEventifyTables(
+            db, testUsers, testEvents, testEventify
+            )
+        })
+
+        it('should delete an eventify by id', () => {
+          return db('eventify_log')
+            .first()
+            .then(eventify => {
+              return supertest(app)
+                .delete(`/api/events/${eventify.id}`)
+                .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+                .expect(204)
+            })
+        })
+      })
+
     })

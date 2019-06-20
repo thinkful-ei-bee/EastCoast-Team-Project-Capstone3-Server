@@ -15,6 +15,7 @@ const EventifyService ={
         'up.music_like',
         'up.movie_like',
         'up.me_intro',
+        'up.age',
         'evs.event_name',
         'evs.event_date',
         'evs.event_time',
@@ -58,12 +59,12 @@ const EventifyService ={
       .returning('*')
   },
 
-  updateEvent(db,id,newEventified){
+  updateEvent(db, id, newEventified){
     console.log(newEventified)
-    //return db('eventify_log')
+    return db('eventify_log')
 
-      // .where({id})
-      // .update(newEventified)
+      .where({id})
+      .update(newEventified)
   },
 
   deleteEvent(db,id){
@@ -72,8 +73,6 @@ const EventifyService ={
       .where({id})
       .delete()
   },
-
-
 }
 
 module.exports = EventifyService
