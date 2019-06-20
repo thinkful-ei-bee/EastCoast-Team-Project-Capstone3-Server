@@ -57,9 +57,10 @@ function makeEventsArray(users) {
   ]
 }
 
-function makeEventifyArray(users) {
+function makeEventifyArray() {
   return [
     {
+      id: 1,
       sender_id: 1,
       recipient_id: 2,
       date_created: '2029-01-22T16:28:32.615Z',
@@ -67,8 +68,9 @@ function makeEventifyArray(users) {
       is_accept: false
     },
     {
+      id: 2,
       sender_id: 2,
-      recipient_id: 5,
+      recipient_id: 1,
       date_created: '2029-01-22T16:28:32.615Z',
       event: 2,
       is_accept: false
@@ -85,7 +87,7 @@ function makeEventsFixtures() {
 function makeEventifyFixtures() {
   const testUsers = makeUsersArray()
   const testEvents = makeEventsArray()
-  const testEventify = makeEventifyArray(testUsers)
+  const testEventify = makeEventifyArray()
   return { testUsers, testEvents, testEventify }
 }
 
@@ -125,8 +127,9 @@ function seedEventsTables(db, users, events) {
 
 function seedEventifyTables(db, users, events, eventify) {
   return seedUsers(db, users)
-    // .then(() => db.into('events').insert(events))
+    .then(() => db.into('events').insert(events))
     .then(() => db.into('eventify_log').insert(eventify))
+
 }
 
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
