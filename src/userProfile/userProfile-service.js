@@ -31,13 +31,7 @@ const userProfileService ={
   },
   updateUserProfile(db,id,updateProfile){
     return db ('user_profile')
-<<<<<<< HEAD
-      .where({'user_id': id})
-||||||| merged common ancestors
-      .where({id: id})
-=======
       .where('user_id', id)
->>>>>>> 3b179b803d40d61b990335865dd1d768391748af
       .update(updateProfile)
       .returning('*')
   },
