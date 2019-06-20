@@ -69,7 +69,7 @@ EventifyRouter
     req.params.eventify_id
   )
   .then(eventify => {
-    res.status(204).send('Successfully delete')
+    res.status(204).end()
   })
   .catch(next)
 })
