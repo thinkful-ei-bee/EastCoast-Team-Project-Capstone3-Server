@@ -18,7 +18,7 @@ describe('User Endpoints', function(){
 
     afterEach('cleanup', () => helpers.cleanTables(db))
 
-    describe.only(`POST /api/users`, () => {
+    describe(`POST /api/users`, () => {
         this.beforeEach('insert users', () => helpers.seedUsers(db, testUsers))
 
         const requiredFields = ['email', 'gender', 'full_name', 'password']
