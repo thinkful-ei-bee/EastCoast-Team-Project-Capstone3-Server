@@ -2,7 +2,7 @@ const app = require('../src/app')
 const helpers = require('./test-helpers')
 const supertest = require('supertest');
 
-describe.skip('Events Endpoints', function () {
+describe('Events Endpoints', function () {
   let db
 
   const{
@@ -149,17 +149,6 @@ describe.skip('Events Endpoints', function () {
           expect(res.headers.location).to.equal(`/api/events/${res.body.id}`)
         })
       })
-
-      // it('should respond with a 400 status when given bad data', () => {
-      //   const badItem = {
-      //     invalidData: 'baddata'
-      //   }
-      //   return supertest(app)
-      //     .post('/api/events')
-      //     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-      //     .send(badItem)
-      //     .expect(400)
-      // })
     })
 
     describe('PATCH /api/events/:event_id', () => {

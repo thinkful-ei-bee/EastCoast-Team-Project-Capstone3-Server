@@ -76,7 +76,6 @@ describe('Eventify Endpoints', function () {
             expect(res.body.id).to.equal(eventify.id);
             expect(res.body.sender_id).to.equal(eventify.sender_id)
             expect(res.body.recipient_id).to.equal(eventify.recipient_id)
-            // expect(res.body.date_created).to.equal(eventify.date_created)
             expect(res.body.event).to.equal(eventify.event)
             expect(res.body.is_accept).to.equal(eventify.is_accept)
           })
@@ -212,7 +211,6 @@ describe('Eventify Endpoints', function () {
                 .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
                 .expect(204)
             })
+          })
         })
-      })
-
     })
