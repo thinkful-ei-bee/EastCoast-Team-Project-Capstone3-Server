@@ -2,7 +2,19 @@ const app = require('../src/app')
 const helpers = require('./test-helpers')
 const supertest = require('supertest');
 
+<<<<<<< HEAD
+describe('Events Endpoints', function () {
+||||||| merged common ancestors
+<<<<<<<<< Temporary merge branch 1
 describe.skip('Events Endpoints', function () {
+||||||||| merged common ancestors
+describe.only('Events Endpoints', function () {
+=========
+describe('Events Endpoints', function () {
+>>>>>>>>> Temporary merge branch 2
+=======
+describe.skip('Events Endpoints', function () {
+>>>>>>> 190d2ace9642749dbf88d50b08fa3fa5f522c33f
   let db
 
   const{
@@ -84,6 +96,7 @@ describe.skip('Events Endpoints', function () {
         return db('events')
           .first()
           .then(_event => {
+            console.log(_event)
             event = _event
             return supertest(app)
               .get(`/api/events/${event.id}`)
@@ -115,10 +128,9 @@ describe.skip('Events Endpoints', function () {
 
     describe('POST /api/events', () => {
       beforeEach('insert some events and users', () => {
-        return helpers.seedEventsTables(
+        return helpers.seedUsers(
           db,
-          testUsers,
-          testEvents
+          testUsers
         )
       })
 
@@ -149,17 +161,6 @@ describe.skip('Events Endpoints', function () {
           expect(res.headers.location).to.equal(`/api/events/${res.body.id}`)
         })
       })
-
-      // it('should respond with a 400 status when given bad data', () => {
-      //   const badItem = {
-      //     invalidData: 'baddata'
-      //   }
-      //   return supertest(app)
-      //     .post('/api/events')
-      //     .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-      //     .send(badItem)
-      //     .expect(400)
-      // })
     })
 
     describe('PATCH /api/events/:event_id', () => {

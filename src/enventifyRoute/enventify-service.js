@@ -15,6 +15,7 @@ const EventifyService ={
         'up.music_like',
         'up.movie_like',
         'up.me_intro',
+        'up.age',
         'evs.event_name',
         'evs.event_date',
         'evs.event_time',
@@ -72,8 +73,6 @@ const EventifyService ={
       .where({id})
       .delete()
   },
-
-
 }
 
 module.exports = EventifyService
