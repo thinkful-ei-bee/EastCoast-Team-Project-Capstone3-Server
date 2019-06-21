@@ -43,8 +43,6 @@ You are good to go at this point and simply need to run `npm start` for the clie
 5. Seed the database
 6. Run the migrations down `npm run migrate --0`
 
-### Screenshots:
-
 ### Authorization:
 You can create your own account or you can use these credentials to test the app:<br>
 #### Male Account:
