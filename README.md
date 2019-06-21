@@ -9,7 +9,7 @@
 [Rendezvous](https://rendezvous-app.now.sh/)
 
 ### API used:
-[Server Repo](https://github.com/thinkful-ei-bee/EastCoast-Team-Project-Capstone3-Server)
+[Client Repo](https://github.com/thinkful-ei-bee/EastCoast-Team-Project-Client)
 
 ### App Summary:
 Welcome to Rendezvous, where singles meet their perfect mate by eventifying their dating experience!
@@ -43,8 +43,6 @@ You are good to go at this point and simply need to run `npm start` for the clie
 5. Seed the database
 6. Run the migrations down `npm run migrate --0`
 
-### Screenshots:
-
 ### Authorization:
 You can create your own account or you can use these credentials to test the app:<br>
 #### Male Account:
@@ -60,3 +58,4 @@ Password: demoPass2019!
 * PostgreSQL
 * Express
 * CSS
+* Jest
