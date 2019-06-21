@@ -57,14 +57,38 @@ function makeEventsArray(users) {
   ]
 }
 
-function makeExpectedEvents(users, events) {
-  const user = users.find(user => user.id === events.user_id)
+function makeEventifyArray() {
+  return [
+    {
+      id: 1,
+      sender_id: 1,
+      recipient_id: 2,
+      date_created: '2029-01-22T16:28:32.615Z',
+      event: 1,
+      is_accept: false
+    },
+    {
+      id: 2,
+      sender_id: 2,
+      recipient_id: 1,
+      date_created: '2029-01-22T16:28:32.615Z',
+      event: 2,
+      is_accept: false
+    }
+  ]
 }
 
 function makeEventsFixtures() {
   const testUsers = makeUsersArray()
   const testEvents = makeEventsArray(testUsers)
   return { testUsers, testEvents }
+}
+
+function makeEventifyFixtures() {
+  const testUsers = makeUsersArray()
+  const testEvents = makeEventsArray()
+  const testEventify = makeEventifyArray()
+  return { testUsers, testEvents, testEventify }
 }
 
 function cleanTables(db) {
@@ -77,7 +101,7 @@ function cleanTables(db) {
         intrigued_log,
         user_profile
         RESTART IDENTITY CASCADE`
-    )
+      )
     )
   }
 
@@ -101,6 +125,13 @@ function seedEventsTables(db, users, events) {
     .then(() => db.into('events').insert(events))
 }
 
+function seedEventifyTables(db, users, events, eventify) {
+  return seedUsers(db, users)
+    .then(() => db.into('events').insert(events))
+    .then(() => db.into('eventify_log').insert(eventify))
+
+}
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   const token = jwt.sign({ user_id: user.id }, secret, {
          subject: user.user_name,
@@ -112,10 +143,17 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
 module.exports = {
   makeKnexInstance,
   makeUsersArray,
+  seedUsers,
+
   makeEventsArray,
   seedUsers,
   seedEventsTables,
   makeEventsFixtures,
+
+  makeEventifyArray,
+  seedEventifyTables,
+  makeEventifyFixtures,
+
   cleanTables,
   makeAuthHeader,
 }
