@@ -8,8 +8,8 @@
 ### Link to Live App:
 [Rendezvous](https://rendezvous-app.now.sh/)
 
-### API used:
-[Server Repo](https://github.com/thinkful-ei-bee/EastCoast-Team-Project-Capstone3-Server)
+### Client side:
+[Client Repo](https://github.com/thinkful-ei-bee/EastCoast-Team-Project-Client)
 
 ### App Summary:
 Welcome to Rendezvous, where singles meet their perfect mate by eventifying their dating experience!
