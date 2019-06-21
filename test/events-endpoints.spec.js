@@ -2,7 +2,19 @@ const app = require('../src/app')
 const helpers = require('./test-helpers')
 const supertest = require('supertest');
 
+<<<<<<< HEAD
 describe('Events Endpoints', function () {
+||||||| merged common ancestors
+<<<<<<<<< Temporary merge branch 1
+describe.skip('Events Endpoints', function () {
+||||||||| merged common ancestors
+describe.only('Events Endpoints', function () {
+=========
+describe('Events Endpoints', function () {
+>>>>>>>>> Temporary merge branch 2
+=======
+describe.skip('Events Endpoints', function () {
+>>>>>>> 190d2ace9642749dbf88d50b08fa3fa5f522c33f
   let db
 
   const{

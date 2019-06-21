@@ -4,10 +4,10 @@ const jsonParser= express.json()
 const path = require('path')
 const eventsRouter = express.Router()
 
-const serializeEvent = event => ({
-  id: event.id,
-  event_name: xss(event.title),
-})
+// const serializeEvent = event => ({
+//   id: event.id,
+//   event_name: xss(event.title),
+// })
 
 eventsRouter
   .route('/events')

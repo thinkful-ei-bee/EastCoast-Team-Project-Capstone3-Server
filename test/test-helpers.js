@@ -30,6 +30,29 @@ function makeUsersArray() {
   ]
 }
 
+function makeProfileArray(users) {
+  return [
+    {
+      id: 1,
+      user_id: 1,
+      profile_picture: 'https://reason.org/wp-content/uploads/2018/01/guybentley.jpg',
+      music_like: 'test movie 1',
+      movie_like: 'test music 1',
+      me_intro: 'test bio 1'
+    },
+    {
+      
+      id: 2,
+      user_id: 2,
+      profile_picture: 'https://assets.capitalfm.com/2018/23/lilliya-scarlett-instagram-1528814125-custom-0.png',
+      music_like: 'test music 2',
+      movie_like: 'test movie 2',
+      me_intro: 'test bio 2'
+    
+    }
+  ]
+}
+
 function makeEventsArray(users) {
   return [
     {
@@ -91,6 +114,12 @@ function makeEventifyFixtures() {
   return { testUsers, testEvents, testEventify }
 }
 
+function makeProfileFixtures() {
+  const testUsers = makeUsersArray()
+  const testProfiles = makeProfileArray(testUsers)
+  return {testUsers, testProfiles}
+}
+
 function cleanTables(db) {
   return db.transaction(trx =>
     trx.raw(
@@ -132,6 +161,11 @@ function seedEventifyTables(db, users, events, eventify) {
 
 }
 
+function seedUserProfiles(db, users, profile) {
+  return seedUsers(db, users)
+    .then(() => db.into('user_profile').insert(profile))
+}
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   const token = jwt.sign({ user_id: user.id }, secret, {
          subject: user.user_name,
@@ -144,6 +178,10 @@ module.exports = {
   makeKnexInstance,
   makeUsersArray,
   seedUsers,
+
+  makeProfileFixtures,
+  makeProfileArray,
+  seedUserProfiles,
 
   makeEventsArray,
   seedUsers,
