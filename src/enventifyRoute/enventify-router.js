@@ -87,14 +87,7 @@ EventifyRouter
     eventifyToUpdate
     )
     .then(eventify => {
-<<<<<<< HEAD
-      console.log(eventify)
       res.status(200).json(eventifyToUpdate)
-||||||| merged common ancestors
-      res.status(200).json(eventify[0])
-=======
-      res.status(200).json(eventifyToUpdate)
->>>>>>> 4c597aeee38faffb42fa9fb0b2b00cb97acaa75e
     })
     .catch(next)
 })
