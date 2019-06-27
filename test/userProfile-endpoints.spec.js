@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
 
-describe('UserProfile Endpoints', function () {
+describe.only('UserProfile Endpoints', function () {
   let db
 
   const {
@@ -21,17 +21,17 @@ describe('UserProfile Endpoints', function () {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
-  describe(`GET /api/current-user`, () => {
-    beforeEach('insert user_profile', () => {
+  describe(`GET /api/user_profile`, () => {
+    before('insert user_profile', () => {
       return helpers.seedUserProfiles(
         db,
         testUsers,
         testProfiles
       )
     })
-    it('should respond to GET `/current-user` with an array of profiles and a status 200', () => {
+    it('should respond to GET `/api/user_profile/current-user` with an array of profiles and a status 200', () => {
       return supertest(app)
-        .get('/api/current-user')
+        .get('/api/user_profile/current-user')
         .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
         .expect(200)
         .expect(res => {
@@ -90,7 +90,7 @@ describe('UserProfile Endpoints', function () {
   // })
 
   describe('DELETE /api/user_profile/:user_id', () => {
-    this.beforeEach('insert some users and profiles', () => {
+    before('insert some users and profiles', () => {
       return helpers.seedUserProfiles(
         db,
         testUsers,
@@ -100,9 +100,9 @@ describe('UserProfile Endpoints', function () {
     it('should delete a profile by id', () => {
       return db('user_profile')
         .first()
-        .then(profile => {
+        .then(user => {
           return supertest(app)
-            .delete(`/api/user_profile/${profile.id}`)
+            .delete(`/api/user_profile/${user.id}`)
             .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
             .expect(204)
         })

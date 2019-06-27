@@ -82,7 +82,7 @@ userProfileRouter
   .delete(requireAuth,(req,res,next)=>{
     userProfileService.deleteUserProfile(
       req.app.get('db'),
-      req.params.profile_id
+      req.params.user_id
     )
     .then(numRowAffected=>{
       res.status(204).end()
