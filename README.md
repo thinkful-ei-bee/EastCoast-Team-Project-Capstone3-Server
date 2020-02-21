@@ -2,7 +2,7 @@
 
 ## Authors:
 * Farah Gustafson
-* Jizong Liang
+* David Liang
 * Laurel Butler
 
 ### Link to Live App:
